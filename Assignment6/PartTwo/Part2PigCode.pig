@@ -1,1 +1,15 @@
-..
+book1 = LOAD 'shakespeare'  AS(line:Chararray);
+book2 = LOAD 'bible' AS(line:Chararray);
+book1_word = FOREACH book1 GENERATE FLATTEN(TOKENIZE(line, ' ')) AS word;
+book1_groupby = GROUP book1_word BY word;
+filter1 = FILTER book1_groupby BY org.apache.pig.piggybank.evaluation.string.LENGTH($0)==5;
+book1_wordcount = FOREACH filter1 GENERATE group AS word, COUNT(book1_word) as Count;
+book2_word = FOREACH book2 GENERATE FLATTEN(TOKENIZE(line, ' ')) AS word;
+book2_groupby = GROUP book2_word BY word;
+filter2 = FILTER book2_groupby BY org.apache.pig.piggybank.evaluation.string.LENGTH($0)==5;
+book2_wordcount = FOREACH filter2 GENERATE group AS word, COUNT(book2_word) as Count;
+joinresult= JOIN book1_wordcount by $0, book2_wordcount by $0;
+result = foreach joinresult generate book1_wordcount::word as word,  book1_wordcount::Count+book2_wordcount::Count as count;
+books_order = ORDER result By count DESC;
+result = LIMIT books_order 10;
+STORE result into 'part2outk5';
