@@ -1,0 +1,10 @@
+#AustralianOpen	30
+#djokovic	12
+#tennis	12
+#tennisLaver	6
+#serenawilliams	6
+#Djokovic	6
+#rmcliveRT	6
+#GrandSlam	6
+#TennisNews	2
+#Tennis	2
